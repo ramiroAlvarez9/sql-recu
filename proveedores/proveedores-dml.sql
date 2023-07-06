@@ -29,12 +29,13 @@ DELETE FROM envios
 WHERE cantidad BETWEEN 200 AND 300 
 
 --h)
+-- (h) Elimine los artículos de La Plata.
 
-DELETE FROM envios
-WHERE id_art IN ( SELECT id_art FROM articulos WHERE ciudad = 'La Plata' );
+--DELETE FROM envios
+--WHERE id_art IN ( SELECT id_art FROM articulos WHERE ciudad = 'La Plata' );
 
-
-
+DELETE FROM articulos
+WHERE ciudad = 'La Plata';
 
 
 
