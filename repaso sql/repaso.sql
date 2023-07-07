@@ -146,3 +146,29 @@ SELECT COUNT(DISTINCT categoria) FROM proveedores;
 -- valor total de una columna;
 -- el DISTINCT no funciona en este caso.
 SELECT SUM(categoria) FROM 
+
+-- GROUP BY
+/* 
+The GROUP BY clause groups rows that have the same values into
+summary rows, like "find the number of customers in each country".
+The GROUP BY clause is often used with aggregate functions like 
+COUNT(), MAX(), MIN(), SUM(), AVG() 
+to group the result-set by one or more columns.
+*/
+
+
+SELECT categoria, COUNT(p.ciudad) FROM proveedores p GROUP BY categoria;
+
+-- HAVING -- 
+
+/*
+    WHERE clause cannot be used with aggregate functions
+    Aggregate functions are often used with GROUP BY clauses, and by adding HAVING 
+    we can write condition like we do with WHERE clauses.
+*/
+
+SELECT id_prov FROM proveedores WHERE id_prov ILIKE 'p%' GROUP BY id_prov HAVING MAX(categoria) > 20;
+
+--
+
+
