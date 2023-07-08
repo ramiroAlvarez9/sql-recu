@@ -78,20 +78,22 @@ WHERE
  (j) Obtener, para los envíos del proveedor P2, el número de suministros realizados, el de
  artículos distintos suministrados y la cantidad total.
  (k) Obtener la cantidad máxima suministrada en un mismo envío, para cada proveedor.
- (l) Para cada artículo y componente suministrado obtener los valores de id_comp, id_art
- y la cantidad total correspondiente.
+ 
+ (l) Para cada artículo y componente suministrado obtener los valores de id_comp, id_art y la cantidad total correspondiente. X
+ 
  (m) Seleccionar los nombres de los componentes que son suministrados en una cantidad
  total superior a 500.
+
  (n) Obtener los identificadores de artículos, id_art, para los que se ha suministrado algún
- componente del que se haya suministrado una media superior a 420 artículos.
+ componente del que se haya suministrado una media superior a 420 artículos. X
  (ñ) Seleccionar los identificadores de proveedores que hayan realizado algún envío con
  cantidad mayor que la media de los envíos realizados para el componente a que co-
- rresponda dicho envío.
+ rresponda dicho envío. X
  (o) Seleccionar los identificadores de artículos para los cuales todos sus componentes se
  fabrican en una misma Ciudad.++
- 10/12
- 
- 
+ (p) Seleccionar los identificadores de artículos para los que se provean envíos de todos los
+ componentes existentes en la base de datos.
+
  */
 
 
@@ -177,13 +179,34 @@ SELECT e.id_prov, MAX(e.cantidad) AS cantidad_maxima_por_proveedor
 FROM envios e 
 GROUP BY e.id_prov ORDER BY e.id_prov;
 
+--- l) Para cada artículo y componente suministrado obtener los valores de id_comp, id_art y la cantidad total correspondiente. X
 
---- l) Para cada artículo y componente suministrado obtener los valores de id_comp, id_art y la cantidad total correspondiente.
+SELECT DISTINCT e.id_comp, e.id_art,  SUM(e.cantidad) AS cantidad_por_art_comp 
+FROM envios e 
+GROUP BY e.id_comp, e.id_art;
 
-SELECT  
-    e.id_art, 
-    e.id_comp, 
-    SUM(e.cantidad) AS cant_total_comp , 
-    SUM(a.cantidad) AS cant_total_art 
-FROM envios e NATURAL JOIN envios a GROUP BY e.id_art, e.id_comp; 
+
+-- (m) Seleccionar los nombres de los componentes que son suministrados en una cantidad total superior a 500.
+
+SELECT e.id_comp, SUM(e.cantidad) AS cant_total_por_comp FROM envios e GROUP BY e.id_comp HAVING SUM(e.cantidad) > 500  ;
+
+
+--n) Obtener los identificadores de artículos, id_art, para los que se ha suministrado algún componente del que se haya suministrado una media superior a 420 artículos.
+
+SELECT e.id_art 
+FROM envios e 
+GROUP BY e.id_art HAVING AVG(e.cantidad) > 420;
+
+
+-- (ñ) Seleccionar los identificadores de proveedores que hayan realizado algún envío con
+-- cantidad mayor que la media de los envíos realizados para el componente a que corresponda dicho envío. X
+
+SELECT e.id_prov
+
+
+
+ (o) Seleccionar los identificadores de artículos para los cuales todos sus componentes se
+ fabrican en una misma Ciudad.
+
+
 

@@ -136,31 +136,6 @@ SELECT DISTINCT t.oficio FROM trabajador t NATURAL JOIN asignacion a WHERE a.id_
 --c)
 SELECT DISTINCT t.nombre AS trabajador ,sup.nombre AS supervisor FROM trabajador t JOIN trabajador sup ON t.legajo_supv = sup.legajo;
 
-
-
-
- legajo |    nombre    | tarifa |    oficio    | legajo_supv | edad 
---------+--------------+--------+--------------+-------------+------       
-   1235 | M. Fernandez |     13 | electricista |        1311 |     
-   1311 | C. Garcia    |     16 | electricista |        1311 |     
-   1412 | C. Gonzalez  |     14 | plomero      |        1520 |     
-   1520 | H. Caballero |     12 | plomero      |        1520 |     
-   2920 | R. Perez     |     10 | albanhil     |        2920 |     
-   3001 | J. Gutierrez |      8 | carpintero   |        3231 |     
-   3231 | P. Alvarez   |     17 | carpintero   |        3231 |                                        
-
-
- legajo |    nombre    | tarifa |    oficio    | legajo_supv | edad 
---------+--------------+--------+--------------+-------------+------
-   1235 | M. Fernandez |     13 | electricista |        1311 |     
-   1311 | C. Garcia    |     16 | electricista |        1311 |     
-   1412 | C. Gonzalez  |     14 | plomero      |        1520 |     
-   1520 | H. Caballero |     12 | plomero      |        1520 |     
-   2920 | R. Perez     |     10 | albanhil     |        2920 |     
-   3001 | J. Gutierrez |      8 | carpintero   |        3231 |     
-   3231 | P. Alvarez   |     17 | carpintero   |        3231 | 
-
-
 SELECT t.nombre AS trabajador_nombre, s.nombre AS supervisor_nombre FROM trabajador s JOIN trabajador t ON t.legajo_supv = s.legajo ;
 
 
@@ -224,7 +199,6 @@ SELECT COUNT(DISTINCT oficio) AS cantidad_de_oficios FROM trabajador;
 
 */
 
-
 -- (j) Para cada tipo de edificio, cuál es el nivel de calidad medio de los edificios con categoría 1? 
 -- Considérense sólo aquellos tipos de edificios que tienen un nivel de calidad máximo no mayor que 3. 
 
@@ -258,6 +232,87 @@ WHERE t.tarifa < promedio_oficio.promedio;
  -- (enie) Qué supervisores tienen trabajadores que tienen una tarifa por hora por encima de los 12 euros?
 
 SELECT DISTINCT sup.nombre AS supervisor , t.nombre AS trabajador, t.tarifa FROM trabajador t JOIN trabajador sup ON t.legajo_supv = sup.legajo AND (t.tarifa > 12);
+
+
+(l) Qué trabajadores reciben una tarifa por hora menor que la del promedio de los traba-
+jadores que tienen su mismo oficio?  X
+
+SELECT t1.*
+FROM trabajador t1   
+WHERE 
+t1.tarifa < 
+( 
+SELECT AVG(tarifa)
+FROM trabajador t2
+WHERE t1.oficio = t2.oficio 
+);
+
+
+
+
+SELECT t1.legajo, t1.nombre, AVG(t1.tarifa) FROM trabajador t1 GROUP BY t1.legajo ;
+
+
+
+
+
+
+(m) Qué trabajadores reciben una tarifa por hora menor que la del promedio de los traba-
+jadores que dependen del mismo supervisor que él?
+
+
+SELECT t1.*
+FROM trabajador AS t1
+WHERE t1.tarifa < 
+(
+	SELECT avg(s.tarifa)
+	FROM trabajador AS s
+	WHERE t1.legajo_supv = s.legajo_supv
+); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ legajo |    nombre    | tarifa |    oficio    | legajo_supv | edad 
+--------+--------------+--------+--------------+-------------+------
+   1235 | M. Fernandez |     13 | electricista |        1311 |     
+   1311 | C. Garcia    |     16 | electricista |        1311 |     
+   1412 | C. Gonzalez  |     14 | plomero      |        1520 |     
+   1520 | H. Caballero |     12 | plomero      |        1520 |     
+   2920 | R. Perez     |     10 | albanhil     |        2920 |     
+   3001 | J. Gutierrez |      8 | carpintero   |        3231 |     
+   3231 | P. Alvarez   |     17 | carpintero   |        3231 | 
+
+
+
+
+
+
+ id_e |         dir          |    tipo    | nivel_calidad | categoria | ciudad 
+------+----------------------+------------+---------------+-----------+--------
+  111 | Av. Paseo Colon 1213 | oficina    |             4 |         1 | 
+  210 | Rivadavia 1011       | oficina    |             3 |         1 | 
+  312 | Tucuman 123          | oficina    |             2 |         2 | 
+  435 | Cabildo 456          | comercio   |             1 |         1 | 
+  460 | Santa Fe 1415        | almacen    |             3 |         3 | 
+  515 | Chile 789            | residencia |             3 |         2 | 
+
+
+
+
+
+
+
 
 
 
